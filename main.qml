@@ -33,7 +33,6 @@ Window {
         //삼항연산자
 
 
-
     }
     GridLayout {
         id: gridLayout
@@ -52,12 +51,12 @@ Window {
 
         Row {
             id: row1
-            spacing: 20
+            spacing: 15
             Layout.fillWidth: true
             Layout.fillHeight: true
             width:200
             height: 40
-            Layout.alignment:  Qt.AlignTop//값은 위젯의 위쪽 가장자리를 레이아웃 셀 내에서 할당된 공간의 위쪽 가장자리와 정렬하도록 Qt에 지시하는 정렬 플래그
+            Layout.alignment:  Qt.AlignCenter//값은 위젯의 위쪽 가장자리를 레이아웃 셀 내에서 할당된 공간의 위쪽 가장자리와 정렬하도록 Qt에 지시하는 정렬 플래그
             Layout.row: 1
 
 
@@ -66,6 +65,7 @@ Window {
                 id: roundButtonAC
                 width:145
                 height:40
+                Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
                 Image {
                     id: imageac
                     width: parent.width/2
@@ -107,7 +107,7 @@ Window {
                     radius: Math.min(width, height)
                 }
 
-                onClicked: calculator_text_equals.text += "/"
+                onClicked: calculator_text_equals.text += "/";
             }
         }
 
@@ -615,8 +615,7 @@ Window {
                 spacing: 10
 
                 Text {
-                    // ListModel에서 계산식과 결과를 표시합니다
-                    //text: calculatorModel.get(calculatorModel.count - 1 - index).calculation + calculatorModel.get(calculatorModel.count - 1 - index).result //리스트의 거꾸로 표시하는거 !
+                     //리스트의 거꾸로 표시하는거 !
                     text: {
                                        var indexInModel = calculatorModel.count - 1 - index;
                                        if (indexInModel >= 0 && indexInModel < calculatorModel.count) {

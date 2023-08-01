@@ -22,7 +22,7 @@ public:  //public 섹션에서는 클래스의 공용 멤버 함수들을 선언
     void setNumber(double num1, double num2) { this->num1 = num1; this->num2 = num2; }
     double getResult() { return result; }
     void setInput_string(QVariant input_string) { this->input_string = input_string; emit input_stringChanged(); } //시그널 발생
-    QVariant getInput_string() { return input_string; }
+    QVariant getInput_string() { return input_string;}
 
     bool getRetvalue() {return retValue;} //cpp에서bool타입을 받아오고 qml로 bool타입넘겨준다.
 

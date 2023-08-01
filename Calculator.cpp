@@ -1,4 +1,4 @@
-#include "calculator.h"
+#include "Calculator.h"
 #include <QDebug>
 #include <QVariant>
 #include <iostream>
@@ -7,25 +7,33 @@
 #include <iomanip>  // fixed 라이브러리
 #include <cmath>  // setprecision 라이브러리
 
+
 using namespace std;
 
 Calculator::Calculator(){}
 Calculator::~Calculator(){}
 
-
-
+//Calculator 클래스의 멤버 함수
 double Calculator:: calculate () {
 
-    // qml에서 가져온 input_string를 QVariant -> String 으로 형변환
+    //qml 에서 QVariant 변수인 input_string을 input_exp라는 C++ std::string 유형으로 변환합니다.
+    //input_string은 QString 형식의 입력 표현식을 포함하는 Calculator 클래스의 멤버 변수인 것 같습니다.
+
     string input_exp = input_string.toString().toStdString();
 
+    //이 변수는 입력 표현식에서 추출한 숫자 값과 산술 연산자를 저장하도록 선언됩니다.
     double num1, num2;
     char sign;
-    retValue = true;
+    retValue = true;  //qml 인자 true,false받는거
 
-
-    // 2번을 예외상황을 처리하기 위해 num1, num2 초기화
+    //num1, num2 초기화
     num1 = 0; num2 = 0;
+
+    //stringstream stream(input_exp);: std::stringstream 객체 stream을 생성하고
+    //input_exp 문자열로 초기화합니다.
+    //stringstream은 형식이 지정된 입력 작업을 수행할 수 있으므로 문자열을 다른 데이터 유형으로
+    //변환하는 데 유용합니다.
+
 
     stringstream stream(input_exp);
     stream >> num1;
@@ -33,27 +41,24 @@ double Calculator:: calculate () {
     stream >> num2;
 
 
-    size_t len = input_exp.length();  // 입력받은 문자열 길이 구하기
-    size_t sign_index = input_exp.find(sign);  // sign 인덱스
-    //명시적형변환
-    //포인터형변환
-    //size_t를 사용하면 std::string에 대한 length() 함수의 반환 유형이 size_t이므로 변수가 문자열의 크기를 나타내는 음수가 아닌 값
+    size_t len = input_exp.length();  // 이 줄은 입력 표현식 input_exp의 길이를 계산
+    size_t sign_index = input_exp.find(sign);  //input_exp 문자열 내에서 sign 문자(산술 연산자)의 인덱스
+    //명시적형변환  -unsigned int 양수일때만 / size_t 음양수 전부 일때
 
-    //1/bool 타입 레퍼런스 넘겨주는거 3개의 항일떄 !
-    //2. num1 혹은 num2 가 비었는지 판단
-   // 3. 입력한 문자열이 길이가 9 이하인지 판단
-    char ch[] = {'-', '+', 'X', '/'};  // 입력된 연산자와 비교하기 위한 연산자 배열 선언
+    // 1. bool 타입 레퍼런스 넘겨주는거 항이 3개일때 경우
+    // 2. num1 혹은 num2 가 비워있는 경우
+    // 3. 입력한 문자열이 길이가 9 이하인지판단하는 경우
+    char ch[] = {'-', '+','X', '/'};  // 입력된 연산자와 비교하기 위한 연산자 배열 선언
     char sign_arr;
-    bool sign2 = true;
+    bool signchack = false;
     for(int i = 0; i < 3; i++) {
         sign_arr = ch[i];
 
         if(input_exp.find(sign_arr,sign_index+1)!= std::string::npos)
         {
-            sign2 = true;
+            signchack = true;
             retValue = false;
             return 0.0;
-
         }
     }
 
@@ -67,9 +72,8 @@ double Calculator:: calculate () {
     }
 
 
-
     // 계산 로직이 정상적으로 작동하는 경우
-    if  (!(fabs(num1) ==1e-9) && !(fabs(num2) == 1e-9) && (sign == '+' || sign == '-' || sign == '*' || sign == '/') && !isnan(result))
+    if  (!(fabs(num1) == 1e-9) && !(fabs(num2) == 1e-9) && (sign == '+' || sign == '-' || sign == '*' || sign == '/') && !isnan(result))
     {
         switch (sign) {
         case '+':
@@ -85,11 +89,15 @@ double Calculator:: calculate () {
             result = multiply();
             break;
         case '/':
-            if (num1 <= 0 && num2 <= 0) {
-                setNumber(num1, num2);
-                result = divide();
+            if ((fabs(num2) == 0)) {
+                retValue = false;
+                return 0.0;
             }
+            setNumber(num1, num2);
+            result = divide();
+            result = std::round(result * 10000.0) / 10000.0;  //소수점 4번째 자리까지만
             break;
+
         default:
             break;
         }
@@ -98,6 +106,7 @@ double Calculator:: calculate () {
 
     return result;
 }
+
 
 
 double Calculator::add() {
